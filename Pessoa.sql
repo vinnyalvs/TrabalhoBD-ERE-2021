@@ -1,2 +1,39 @@
+DROP DATABASE IF EXISTS concessionaria;
+CREATE DATABASE concessionaria;
+USE concessionaria;
 
-INSERT INTO pessoa (Nome,Email,Telefone,Rua,Cidade,Estado,Bairro,CEP,CPF_CNPJ) VALUES ("Ulysses Vargas","tristique@enimsitamet.co.uk","(641) 610-5036","P.O. Box 923, 5201 Nibh. Av.","Itapipoca","CE","7555 Aliquam Avenue","62819-165","16930923 8922"),("Eaton Meyer","vulputate.lacus.Cras@Sedeu.ca","(712) 126-6290","P.O. Box 616, 2127 Erat St.","Camaragibe","PE","6131 Lorem Rd.","51608-340","16160208 9532"),("Uriah Shelton","vulputate@acfermentum.edu","(603) 634-4464","4389 Magna St.","Carapicuíba","SP","640-832 Pede, St.","12809-998","16060617 8861"),("Alexander Wiggins","Vivamus@odioPhasellus.net","(201) 665-8103","P.O. Box 954, 7029 Vitae St.","São João de Meriti","RJ","727-7393 Penatibus St.","24264-216","16310629 1010"),("Brendan Douglas","Maecenas@necorci.edu","(880) 319-9619","P.O. Box 628, 6620 Cras Rd.","Juiz de Fora","MG","2200 Natoque Street","38897438","16850507 1590"),("Theodore Rios","luctus.ut.pellentesque@Proinvelarcu.org","(316) 318-8698","378-2015 Venenatis Street","Ribeirão Preto","SP","Ap #186-4977 Euismod Street","17465-153","16020811 6863"),("Mannix Howell","mi.Duis.risus@Classaptent.ca","(332) 842-3056","575-8307 Urna Rd.","Chapecó","SC","730-2145 Est Avenue","89834-346","16240828 4087"),("Noah Gilmore","nibh@etultricesposuere.org","(562) 187-7332","P.O. Box 681, 2306 Ipsum. Ave","Camaçari","BA","853-2749 At St.","48430-754","16020711 7847"),("Dane Church","Morbi.vehicula.Pellentesque@Nullatemporaugue.edu","(917) 677-6516","9869 Phasellus Rd.","Caxias do Sul","RS","793-238 Eleifend Avenue","91202-831","16850130 7279"),("Amos Robertson","Duis.at@sedlibero.org","(475) 971-0374","Ap #780-9335 Ornare. Street","Itapipoca","CE","P.O. Box 556, 657 Sed, Avenue","60465-560","16630628 1293");
+CREATE TABLE concessionaria.pessoa (
+	nome VARCHAR(255),
+	email VARCHAR(255),
+	telefone VARCHAR(255),
+	rua VARCHAR(255),
+	estado VARCHAR(2),
+	cidade VARCHAR(2),
+	cep VARCHAR(2),
+	cpf_cnpj VARCHAR(2)
+);
+
+USE concessionaria;
+
+INSERT INTO concessionaria.pessoa (nome, email, telefone, rua, estado, cidade, cep, cpf_cnpj) VALUES
+	('Danilo Araújo', 'diasisadora@barbosa.org', '+55 (061) 8478-8119', 'Morro Ana Sophia Lopes, 731', 'Distrito Federal', 'Freitas', '28639-156', '15048793250'),
+	('Marcelo da Rocha', 'calebe89@bol.com.br', '+55 51 3321 2160', 'Avenida Duarte, 947', 'Piauí', 'Silveira', '37166726', '51039276830'),
+	('Renan da Paz', 'pbarbosa@pereira.net', '+55 81 5577 6159', 'Trecho Marcelo da Rosa, 69', 'Goiás', 'Melo da Serra', '01618989', '27983654146'),
+	('Dr. Danilo Silva', 'joanagoncalves@teixeira.br', '(084) 6677-3813', 'Feira de Moura, 15', 'São Paulo', 'Lima do Galho', '98545-590', '36792048500'),
+	('André Azevedo', 'martinsmariana@vieira.net', '(011) 4160-6923', 'Estrada Nogueira, 914', 'Santa Catarina', 'Dias', '97670-113', '25176089467'),
+	('Sr. Eduardo Rodrigues', 'enzo53@yahoo.com.br', '(021) 2461 6533', 'Largo de Vieira', 'Ceará', 'Nogueira de Goiás', '49447-499', '64038921506'),
+	('Sr. Davi Luiz Porto', 'araujoleonardo@uol.com.br', '+55 61 0958 4296', 'Chácara Nascimento, 77', 'Acre', 'Gonçalves', '68064580', '16829537002'),
+	('Igor Lopes', 'vitor-hugocardoso@bol.com.br', '+55 (084) 0439-8889', 'Estrada Eduarda Almeida, 9', 'Rio Grande do Norte', 'Lima de Costela', '34582-022', '38406571993'),
+	('Maria Cecília Rezende', 'qcosta@nogueira.br', '(061) 0290 2891', 'Vale Stella Santos', 'Minas Gerais', 'Teixeira de Minas', '08745693', '73289061540'),
+	('João Gabriel Gonçalves', 'silvathomas@gmail.com', '+55 81 2840 1862', 'Rodovia Alana Dias, 7', 'Pernambuco', 'Sales', '22689-671', '40723965161'),
+	('Igor Rezende', 'vinicius93@bol.com.br', '+55 11 6503-5803', 'Vila Alice Mendes, 765', 'Bahia', 'Monteiro', '91481-868', '54908632189'),
+	('Carolina Dias', 'juliasales@hotmail.com', '+55 (031) 5720-9922', 'Recanto Leonardo Aragão', 'Rio de Janeiro', 'Ferreira Grande', '42857211', '31072649543'),
+	('Luiz Otávio Silva', 'luiz-otavio83@hotmail.com', '+55 (084) 8140 7892', 'Condomínio Duarte, 6', 'Rio de Janeiro', 'Vieira', '81641162', '36790854193'),
+	('Heloísa da Luz', 'ana-clara84@hotmail.com', '+55 84 2610 3561', 'Avenida Bernardo Cardoso, 4', 'Rondônia', 'Fernandes', '41070-959', '02514368960'),
+	('Isabel Cavalcanti', 'bruno46@gmail.com', '+55 (071) 6439 5356', 'Alameda de Teixeira, 46', 'Paraná', 'Melo da Mata', '82680164', '16798053203'),
+	('Sra. Ana Clara Freitas', 'vitor61@bol.com.br', '+55 84 9431-3485', 'Vale de Cavalcanti, 49', 'Paraná', 'Almeida das Flores', '82354-358', '70843916222'),
+	('Clara Campos', 'yda-cunha@pires.br', '+55 (051) 5588-2110', 'Aeroporto de Peixoto, 461', 'Minas Gerais', 'Ramos', '87569-357', '08913476584'),
+	('Mirella Moreira', 'salesbenjamin@jesus.com', '31 3905 9952', 'Aeroporto Silva, 58', 'Goiás', 'Rocha', '28874988', '76321958077'),
+	('João Lucas da Mota', 'gporto@gmail.com', '+55 84 3957-7830', 'Largo de Costa, 429', 'Goiás', 'Gomes dos Dourados', '06369156', '42381069704'),
+	('Bruna Melo', 'yasmin64@souza.br', '+55 (081) 9794 2838', 'Lago de Nascimento, 80', 'Goiás', 'Ferreira do Galho', '21108-877', '60842571353');
+

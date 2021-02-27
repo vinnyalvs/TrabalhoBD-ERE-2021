@@ -9,8 +9,13 @@ my_db.add_table(table_name="pessoa", n_rows=20)
 my_db.add_table(table_name="funcionario", n_rows=20)
 my_db.add_table(table_name="vendedor", n_rows=20)
 my_db.add_table(table_name="comprador", n_rows=20)
-
-
+my_db.add_table(table_name="nota_fiscal", n_rows=10)
+my_db.add_table(table_name="venda", n_rows=5)
+my_db.add_table(table_name="aquisicao", n_rows=5)
+my_db.add_table(table_name="patio", n_rows=2)
+my_db.add_table(table_name="veiculo", n_rows=20)
+my_db.add_table(table_name="meta_de_vendas", n_rows=5)
+my_db.add_table(table_name="bonificacao", n_rows=5)
 my_db.add_table(table_name="pagamento", n_rows=20)
 
 

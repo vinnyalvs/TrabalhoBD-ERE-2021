@@ -1,18 +1,3 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Sat Feb 27 12:27:36 2021
-
-@author: vinic
-"""
-
-
-# -*- coding: utf-8 -*-
-"""
-Editor Spyder
-
-Este é um arquivo de script temporário.
-"""
-
 from faker import Faker
 from collections import defaultdict
 from sqlfaker.database import Database
@@ -21,7 +6,15 @@ from sqlfaker.database import Database
 
 my_db = Database(db_name="concessionaria",lang='pt_BR')
 my_db.add_table(table_name="pessoa", n_rows=20)
+my_db.add_table(table_name="funcionario", n_rows=20)
+my_db.add_table(table_name="vendedor", n_rows=20)
+my_db.add_table(table_name="comprador", n_rows=20)
 
+
+my_db.add_table(table_name="pagamento", n_rows=20)
+
+
+# Tablea Pessoa
 # my_db.tables["pessoa"].add_primary_key(column_name="id")
 my_db.tables["pessoa"].add_column(column_name="nome", data_type="varchar(255)", data_target="name")
 my_db.tables["pessoa"].add_column(column_name="email", data_type="varchar(255)", data_target="email")
@@ -31,6 +24,109 @@ my_db.tables["pessoa"].add_column(column_name="estado", data_type="varchar(2)", 
 my_db.tables["pessoa"].add_column(column_name="cidade", data_type="varchar(2)", data_target="city")
 my_db.tables["pessoa"].add_column(column_name="cep", data_type="varchar(2)", data_target="postcode")
 my_db.tables["pessoa"].add_column(column_name="cpf_cnpj", data_type="varchar(2)", data_target="ssn")
+
+
+# Tabela gerente
+# my_db.tables["gerente"].add_primary_key(column_name="id") referencia fucnionario(id)
+
+# Tabela rh
+# my_db.tables["rh"].add_primary_key(column_name="id") referencia funcionario(id)
+
+# Tabela funcionario
+# my_db.tables["funcionario"].add_primary_key(column_name="id") referencia pessoa(id)
+my_db.tables["funcionario"].add_column(column_name="conta", data_type="varchar(2)", data_target="ssn")
+my_db.tables["funcionario"].add_column(column_name="agencia", data_type="varchar(4)", data_target="company")
+
+
+# Tabela Vendedor
+# my_db.tables["vendedor"].add_primary_key(column_name="id") referencia funcionario(id)
+my_db.tables["vendedor"].add_column(column_name="qtdvendas", data_type="int", data_target="int") #mudar dps
+
+
+# Tabela Comprador
+# my_db.tables["comprador"].add_primary_key(column_name="id") referencia pessoa(id)
+my_db.tables["comprador"].add_column(column_name="qtdcompras", data_type="int", data_target="int") #mudar dps
+
+
+# Tabela nota_fiscal
+my_db.tables["nota_fiscal"].add_column(column_name="data_emissao", data_type="date", data_target="date")
+my_db.tables["nota_fiscal"].add_column(column_name="valor", data_type="float", data_target="pydecimal")
+my_db.tables["nota_fiscal"].add_column(column_name="parcelas", data_type="int", data_target="pyint") #mudar dps
+
+
+# Tabela nota_fiscal_aquisicao
+# my_db.tables["nota_fiscal_aquisicao"].add_primary_key(column_name="id") referencia nota_fiscal(id)
+
+
+# Tabela nota_fiscal_venda
+# my_db.tables["nota_fiscal_venda"].add_primary_key(column_name="id") referencia nota_fiscal(id)
+
+
+# Tabela venda
+# my_db.tables["nota_fiscal_venda"].add_primary_key(column_name="id") referencia nota_fiscal(id)
+my_db.tables["venda"].add_column(column_name="quantidade", data_type="int", data_target="int") #mudar dps
+# my_db.tables["cliente"].add_primary_key(column_name="id") referencia cliente(id)
+# my_db.tables["vendedor"].add_primary_key(column_name="id") referencia vendedor(id)
+# my_db.tables["nota_fiscal"].add_primary_key(column_name="id") referencia nota_fiscal(id)
+my_db.tables["venda"].add_column(column_name="desconto", data_type="float", data_target="pydecimal") #mudar dps
+
+
+# Tabela aquisicao
+# my_db.tables["aquisicao"].add_primary_key(column_name="id") referencia comprador(id)
+my_db.tables["aquisicao"].add_column(column_name="quantidade", data_type="int", data_target="int") #mudar dps
+# my_db.tables["comprador"].add_primary_key(column_name="id") referencia comprador(id)
+# my_db.tables["nota_fiscal"].add_primary_key(column_name="id") referencia nota_fiscal(id)
+
+
+# Tabela patio
+# my_db.tables["patio"].add_primary_key(column_name="id")
+my_db.tables["patio"].add_column(column_name="capacidade", data_type="int", data_target="int") #mudar dps
+my_db.tables["patio"].add_column(column_name="cidade", data_type="varchar(255)", data_target="city")
+my_db.tables["patio"].add_column(column_name="estado", data_type="varchar(50)", data_target="state")
+my_db.tables["patio"].add_column(column_name="bairro", data_type="varchar(255)", data_target="region")
+my_db.tables["patio"].add_column(column_name="cep", data_type="varchar(10)", data_target="postcode")
+
+
+# Tabela veiculo
+# my_db.tables["veiculo"].add_primary_key(column_name="id")
+my_db.tables["veiculo"].add_column(column_name="quantidade", data_type="int", data_target="int") #mudar dps
+my_db.tables["veiculo"].add_column(column_name="ano", data_type="int", data_target="int") #mudar dps
+my_db.tables["veiculo"].add_column(column_name="modelo", data_type="varchar(255)", data_target="name") #mudar dps
+my_db.tables["veiculo"].add_column(column_name="cor", data_type="varchar(255)", data_target="color") #mudar dps
+# my_db.tables["veiculo"].add_primary_key(column_name="aquisicao") referencia aquisicao(id)
+# my_db.tables["veiculo"].add_primary_key(column_name="venda") referencia venda(id)
+# my_db.tables["veiculo"].add_primary_key(column_name="patio") referencia patio(id)
+
+
+# Tabela meta_de_vendas
+# my_db.tables["meta_de_vendas"].add_primary_key(column_name="id")
+my_db.tables["meta_de_vendas"].add_column(column_name="quantidade_automoveis_vendidos", data_type="int", data_target="int") #mudar dps
+my_db.tables["meta_de_vendas"].add_column(column_name="mes", data_type="date", data_target="month")
+# my_db.tables["meta_de_vendas"].add_primary_key(column_name="gerente") referencia gerente(id)
+
+
+# Tabela bonificacao
+# my_db.tables["bonificacao"].add_primary_key(column_name="id")
+my_db.tables["bonificacao"].add_column(column_name="data_bonificacao", data_type="date", data_target="date")
+my_db.tables["bonificacao"].add_column(column_name="valor", data_type="float", data_target="pydecimal")
+# my_db.tables["bonificacao"].add_primary_key(column_name="gerente") referencia gerente(id)
+# my_db.tables["bonificacao"].add_primary_key(column_name="funcionario") referencia funcionario(id)
+
+
+# Tabela gerenciamento_funcionario
+# my_db.tables["gerenciamento_funcionario"].add_primary_key(column_name="id") referencia nota_fiscal(id)
+# my_db.tables["gerenciamento_funcionario"].add_primary_key(column_name="rh") referencia rh(id)
+# my_db.tables["bonificacao"].add_primary_key(column_name="funcionario") referencia funcionario(id)
+
+#Tabela Pagamento
+my_db.tables["pagamento"].add_column(column_name="data", data_type="date_time", data_target="date_time")
+my_db.tables["pagamento"].add_column(column_name="valor", data_type="float", data_target="pydecimal") #mudar dps
+my_db.tables["pagamento"].add_column(column_name="rh", data_type="float", data_target="pyint") #restringir
+my_db.tables["pagamento"].add_column(column_name="funcionario", data_type="float", data_target="pyint")
+
+
+
+
 
 my_db.generate_data()
 my_db.export_sql("test.sql")

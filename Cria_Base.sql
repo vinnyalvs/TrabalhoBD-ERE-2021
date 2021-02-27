@@ -39,6 +39,24 @@ CREATE TABLE funcionario
         ON DELETE CASCADE
 );
 
+CREATE TABLE gerente
+(
+    id mediumint(8) unsigned NOT NULL,
+    PRIMARY KEY (id),
+    FOREIGN KEY (id) REFERENCES funcionario(id) 
+        ON UPDATE CASCADE
+        ON DELETE CASCADE
+);
+
+CREATE TABLE rh
+(
+    id mediumint(8) unsigned NOT NULL,
+    PRIMARY KEY (id),
+    FOREIGN KEY (id) REFERENCES funcionario(id) 
+        ON UPDATE CASCADE
+        ON DELETE CASCADE
+);
+
 CREATE TABLE vendedor
 (
     id mediumint(8) unsigned NOT NULL,
@@ -87,10 +105,10 @@ CREATE TABLE nota_fiscal_venda
 );
 
 
-CREATE TABLE vendas
+CREATE TABLE venda
 (
     id mediumint(8) unsigned NOT NULL AUTO_INCREMENT,
-    qtdcompras int(8) unsigned default 0,
+    quantidade int(8) unsigned default 0,
     cliente mediumint(8) unsigned NOT NULL,
     vendedor mediumint(8) unsigned NOT NULL,
     nota_fiscal mediumint(8) unsigned NOT NULL,
@@ -106,4 +124,98 @@ CREATE TABLE vendas
         ON UPDATE CASCADE
         ON DELETE CASCADE
 ) AUTO_INCREMENT=1;
+
+CREATE TABLE aquisicao
+(
+    id mediumint(8) unsigned NOT NULL AUTO_INCREMENT,
+    quantidade int(8) unsigned default 0,
+    comprador mediumint(8) unsigned NOT NULL,
+    nota_fiscal mediumint(8) unsigned NOT NULL,
+  	PRIMARY KEY (id),
+    FOREIGN KEY (comprador) REFERENCES comprador(id) 
+        ON UPDATE CASCADE
+        ON DELETE CASCADE,
+    FOREIGN KEY (nota_fiscal) REFERENCES nota_fiscal_aquisicao(id) 
+        ON UPDATE CASCADE
+        ON DELETE CASCADE
+) AUTO_INCREMENT=1;
+
+
+CREATE TABLE patio
+(
+    id mediumint(8) unsigned NOT NULL AUTO_INCREMENT,
+    nome varchar(255) default NULL,
+    capacidade int(8) unsigned default 10,
+    cidade varchar(255) default NULL,
+    estado varchar(50) default NULL,
+    bairro varchar(255) default NULL,
+    cep varchar(10) default NULL,
+    PRIMARY KEY (id)
+) AUTO_INCREMENT=1;
+
+
+CREATE TABLE veiculo
+(
+    id mediumint(8) unsigned NOT NULL AUTO_INCREMENT,
+    quantidade int(8) unsigned default 1,
+    ano tinyint unsigned default NULL,
+    modelo varchar(255) default NULL,
+    cor varchar(255) default NULL,
+    tipo varchar(255) default NULL,
+    aquisicao mediumint(8) unsigned NOT NULL,
+    venda mediumint(8) unsigned default NULL,
+    patio mediumint(8) unsigned NOT NULL,
+  	PRIMARY KEY (id),
+    FOREIGN KEY (aquisicao) REFERENCES aquisicao(id),
+    FOREIGN KEY (patio) REFERENCES patio(id),
+    FOREIGN KEY (venda) REFERENCES venda(id)
+
+) AUTO_INCREMENT=1;
+
+CREATE TABLE meta_de_vendas
+(
+    id mediumint(8) unsigned NOT NULL AUTO_INCREMENT,
+    quantidade_automoveis_vendidos int(8) unsigned default 1,
+    mes date default NULL,
+    gerente mediumint(8) unsigned NOT NULL,
+  	PRIMARY KEY (id),
+    FOREIGN KEY (gerente) REFERENCES gerente(id)
+) AUTO_INCREMENT=1; 
+
+CREATE TABLE bonificacao
+(
+    id mediumint(8) unsigned NOT NULL AUTO_INCREMENT,
+    data_bonificacao date default NULL,
+    valor float default 0,
+    gerente mediumint(8) unsigned NOT NULL,
+    funcionario mediumint(8) unsigned NOT NULL,
+  	PRIMARY KEY (id),
+    FOREIGN KEY (gerente) REFERENCES gerente(id),
+    FOREIGN KEY (funcionario) REFERENCES funcionario(id)
+) AUTO_INCREMENT=1;
+
+CREATE TABLE pagamento
+(
+    id mediumint(8) unsigned NOT NULL AUTO_INCREMENT,
+    data_pagamento date default NULL,
+    valor float default 0,
+    rh mediumint(8) unsigned NOT NULL,
+    funcionario mediumint(8) unsigned NOT NULL,
+  	PRIMARY KEY (id),
+    FOREIGN KEY (rh) REFERENCES rh(id),
+    FOREIGN KEY (funcionario) REFERENCES funcionario(id)
+) AUTO_INCREMENT=1;
+
+CREATE TABLE gerenciamento_funcionario
+(
+    id mediumint(8) unsigned NOT NULL AUTO_INCREMENT,
+    rh mediumint(8) unsigned NOT NULL,
+    funcionario mediumint(8) unsigned NOT NULL,
+  	PRIMARY KEY (id),
+    FOREIGN KEY (rh) REFERENCES rh(id),
+    FOREIGN KEY (funcionario) REFERENCES funcionario(id)
+) AUTO_INCREMENT=1;
+
+
+
 

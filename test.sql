@@ -3,6 +3,7 @@ CREATE DATABASE concessionaria;
 USE concessionaria;
 
 CREATE TABLE `concessionaria`.`pessoa` (
+	`id` INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
 	`nome` VARCHAR(255),
 	`email` VARCHAR(255),
 	`telefone` VARCHAR(255),
@@ -14,34 +15,62 @@ CREATE TABLE `concessionaria`.`pessoa` (
 );
 
 CREATE TABLE `concessionaria`.`funcionario` (
+	`id` INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
 	`conta` VARCHAR(2),
 	`agencia` VARCHAR(4)
 );
 
 CREATE TABLE `concessionaria`.`vendedor` (
+	`id` INT,
+	FOREIGN KEY (id) REFERENCES funcionario(id),
 	`qtdvendas` INT
 );
 
+CREATE TABLE `concessionaria`.`cliente` (
+	`id` INT PRIMARY KEY AUTO_INCREMENT NOT NULL
+);
+
+CREATE TABLE `concessionaria`.`gerente` (
+	`id` INT,
+	FOREIGN KEY (id) REFERENCES funcionario(id)
+);
+
+CREATE TABLE `concessionaria`.`rh` (
+	`id` INT,
+	FOREIGN KEY (id) REFERENCES funcionario(id)
+);
+
 CREATE TABLE `concessionaria`.`comprador` (
+	`id` INT,
+	FOREIGN KEY (id) REFERENCES funcionario(id),
 	`qtdcompras` INT
 );
 
 CREATE TABLE `concessionaria`.`nota_fiscal` (
+	`id` INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
 	`data_emissao` DATE,
 	`valor` FLOAT,
 	`parcelas` INT
 );
 
 CREATE TABLE `concessionaria`.`venda` (
+	`id` INT,
+	FOREIGN KEY (id) REFERENCES nota_fiscal(id),
 	`quantidade` INT,
 	`desconto` FLOAT
 );
 
 CREATE TABLE `concessionaria`.`aquisicao` (
-	`quantidade` INT
+	`id` INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
+	`comprador` INT,
+	FOREIGN KEY (comprador) REFERENCES comprador(id),
+	`quantidade` INT,
+	`nota_fiscal` INT,
+	FOREIGN KEY (nota_fiscal) REFERENCES nota_fiscal(id)
 );
 
 CREATE TABLE `concessionaria`.`patio` (
+	`id` INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
 	`capacidade` INT,
 	`cidade` VARCHAR(255),
 	`estado` VARCHAR(50),
@@ -50,20 +79,54 @@ CREATE TABLE `concessionaria`.`patio` (
 );
 
 CREATE TABLE `concessionaria`.`veiculo` (
+	`id` INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
 	`quantidade` INT,
 	`ano` INT,
 	`modelo` VARCHAR(255),
-	`cor` VARCHAR(255)
+	`cor` VARCHAR(255),
+	`aquisicao` INT,
+	FOREIGN KEY (aquisicao) REFERENCES aquisicao(id),
+	`venda` INT,
+	FOREIGN KEY (venda) REFERENCES venda(id),
+	`patio` INT,
+	FOREIGN KEY (patio) REFERENCES patio(id)
 );
 
 CREATE TABLE `concessionaria`.`meta_de_vendas` (
+	`id` INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
 	`quantidade_automoveis_vendidos` INT,
-	`mes` DATE
+	`mes` DATE,
+	`gerente` INT,
+	FOREIGN KEY (gerente) REFERENCES gerente(id)
+);
+
+CREATE TABLE `concessionaria`.`nota_fiscal_aquisicao` (
+	`id` INT,
+	FOREIGN KEY (id) REFERENCES nota_fiscal(id)
+);
+
+CREATE TABLE `concessionaria`.`nota_fiscal_venda` (
+	`id` INT,
+	FOREIGN KEY (id) REFERENCES nota_fiscal(id)
+);
+
+CREATE TABLE `concessionaria`.`gerenciamento_funcionario` (
+	`id` INT,
+	FOREIGN KEY (id) REFERENCES nota_fiscal(id),
+	`rh` INT,
+	FOREIGN KEY (rh) REFERENCES rh(id),
+	`funcionario` INT,
+	FOREIGN KEY (funcionario) REFERENCES funcionario(id)
 );
 
 CREATE TABLE `concessionaria`.`bonificacao` (
+	`id` INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
 	`data_bonificacao` DATE,
-	`valor` FLOAT
+	`valor` FLOAT,
+	`gerente` INT,
+	FOREIGN KEY (gerente) REFERENCES gerente(id),
+	`funcionario` INT,
+	FOREIGN KEY (funcionario) REFERENCES funcionario(id)
 );
 
 CREATE TABLE `concessionaria`.`pagamento` (
@@ -75,179 +138,281 @@ CREATE TABLE `concessionaria`.`pagamento` (
 
 USE concessionaria;
 
-INSERT INTO `concessionaria`.`pessoa` (`nome`, `email`, `telefone`, `rua`, `estado`, `cidade`, `cep`, `cpf_cnpj`) VALUES
-	('Nicolas Monteiro', 'larissa83@costela.br', '+55 (021) 9160-7192', 'Distrito Lavínia Moraes, 7', 'Mato Grosso do Sul', 'Moura de Minas', '42710937', '14730592832'),
-	('Gustavo Henrique Fogaça', 'davigomes@nascimento.br', '31 6681-9085', 'Núcleo de da Mata', 'Bahia', 'Castro do Galho', '64137-712', '23645718982'),
-	('Srta. Joana Fogaça', 'lucasramos@ferreira.org', '84 0333-8483', 'Trecho de Silveira, 5', 'Maranhão', 'Araújo', '38325732', '45967081348'),
-	('Nina Oliveira', 'mouramaria-sophia@martins.com', '41 1561 6386', 'Recanto Júlia Martins, 30', 'Bahia', 'Jesus', '03114456', '42317965052'),
-	('Cauê Teixeira', 'caiocastro@gmail.com', '+55 61 3222-8542', 'Avenida de da Mata, 13', 'Roraima', 'Porto', '70350-661', '20531789497'),
-	('Benício Ferreira', 'da-rochasarah@cunha.org', '+55 41 2443-0987', 'Praça de Souza, 789', 'Minas Gerais', 'Pinto', '82017-626', '70321654862'),
-	('Alexandre Moraes', 'imoura@costa.org', '+55 41 7091 9855', 'Viaduto Cardoso, 19', 'Tocantins', 'Cardoso Alegre', '19802-131', '19862730404'),
-	('Lucas Dias', 'uduarte@hotmail.com', '+55 (084) 5601 6621', 'Estação Monteiro, 3', 'Distrito Federal', 'Moreira', '66633-371', '80739546139'),
-	('Nina Costa', 'da-motaluiza@caldeira.net', '84 3341 4831', 'Residencial Pereira', 'Ceará', 'Viana', '55627787', '78390214504'),
-	('Lara da Paz', 'knascimento@yahoo.com.br', '84 6551-9691', 'Sítio de Moura, 4', 'Espírito Santo', 'da Paz', '26393-265', '64872309529'),
-	('Ian Cavalcanti', 'jmonteiro@uol.com.br', '+55 (071) 5651-1736', 'Loteamento Melo, 70', 'Piauí', 'da Cruz do Oeste', '72602-833', '38975012441'),
-	('João Barros', 'da-pazdaniela@ramos.com', '+55 51 9184 4651', 'Trecho de da Rocha, 6', 'Maranhão', 'da Costa da Mata', '65126318', '17269845328'),
-	('Milena Oliveira', 'pintobruna@vieira.com', '+55 (051) 5849-4197', 'Alameda Kamilly da Mota, 5', 'Amazonas', 'da Mata', '36631-078', '87016432580'),
-	('Ana Júlia Silva', 'rodrigovieira@cardoso.br', '(084) 5751-7337', 'Jardim Fogaça, 428', 'Acre', 'Porto', '64788-007', '15203879621'),
-	('Dr. João Guilherme Ferreira', 'uvieira@campos.com', '(081) 4464 2908', 'Viela Maria Julia da Rocha, 89', 'Paraíba', 'Teixeira', '88996-434', '16398574273'),
-	('Pedro Miguel Cardoso', 'caue05@das.com', '(021) 2812-3062', 'Ladeira de Ribeiro', 'Distrito Federal', 'Barros', '79561803', '79405632892'),
-	('Diogo Novaes', 'vmendes@yahoo.com.br', '+55 (084) 4724-7550', 'Morro Nunes, 847', 'Espírito Santo', 'Carvalho Paulista', '76704592', '83625140942'),
-	('Maria Julia Moraes', 'danilo93@cunha.br', '(021) 7691-6861', 'Estação Martins, 30', 'Paraíba', 'Freitas', '12631-964', '89403712597'),
-	('Renan da Cruz', 'alvesalice@goncalves.com', '(021) 1816-0007', 'Passarela de Cardoso', 'Mato Grosso do Sul', 'Dias de Lopes', '58445-815', '60185792359'),
-	('Maria Alice da Cruz', 'luccacosta@martins.com', '(031) 2564 0351', 'Jardim de Carvalho, 835', 'Rio de Janeiro', 'Gonçalves das Pedras', '28824-771', '71403582904');
+INSERT INTO `concessionaria`.`pessoa` (`id`, `nome`, `email`, `telefone`, `rua`, `estado`, `cidade`, `cep`, `cpf_cnpj`) VALUES
+	(1, 'Leandro da Paz', 'tmoura@bol.com.br', '(081) 2453-5544', 'Chácara Fernandes, 56', 'Ceará', 'da Conceição', '75047-441', '40385269170'),
+	(2, 'Lorena Rodrigues', 'pfogaca@araujo.org', '(051) 3063-4495', 'Viaduto Ana Sophia Caldeira, 785', 'Sergipe', 'Nascimento do Sul', '46261-013', '64015738217'),
+	(3, 'Guilherme Moraes', 'luiz-fernando65@bol.com.br', '71 1614-3186', 'Via Kamilly Santos, 1', 'Rio de Janeiro', 'Oliveira', '70497-610', '73506124862'),
+	(4, 'João Gabriel Rocha', 'guilhermelopes@gmail.com', '+55 (081) 8023 0886', 'Estrada Almeida, 79', 'Pará', 'da Conceição da Praia', '99626433', '07319542625'),
+	(5, 'Luana Martins', 'theo09@hotmail.com', '21 7072-6151', 'Aeroporto Cardoso, 3', 'Pernambuco', 'Correia da Serra', '60295-438', '18593047610'),
+	(6, 'Benjamin Barbosa', 'xcarvalho@vieira.com', '(071) 8633-0121', 'Esplanada Esther Gonçalves, 16', 'Rio de Janeiro', 'Martins de Minas', '40004-819', '81975320441'),
+	(7, 'Isadora Mendes', 'qgomes@gmail.com', '+55 41 8525 0108', 'Área Melo, 22', 'Rondônia', 'Teixeira de Minas', '31529117', '69435278000'),
+	(8, 'Bruno da Cruz', 'piresguilherme@ig.com.br', '(061) 7481 8468', 'Via Teixeira, 24', 'Roraima', 'Melo', '83169-779', '02483761526'),
+	(9, 'Evelyn Cardoso', 'pedro-henriquejesus@goncalves.com', '61 7590-7966', 'Largo de Gonçalves, 377', 'Maranhão', 'da Cruz', '68388012', '62907543865'),
+	(10, 'Laís Duarte', 'valentina58@sales.com', '+55 51 8766 3140', 'Distrito Aragão', 'Alagoas', 'Silveira do Galho', '52172-018', '85391042704'),
+	(11, 'Sra. Isis Castro', 'ecarvalho@viana.com', '(011) 6332-6753', 'Feira Fogaça, 35', 'Rio Grande do Norte', 'Pinto de Araújo', '27700-402', '24867513008'),
+	(12, 'Dr. Leandro Caldeira', 'yrodrigues@rocha.com', '+55 31 9700-6837', 'Pátio Nunes, 598', 'Rio Grande do Norte', 'Correia', '57435-832', '68359271437'),
+	(13, 'Arthur Novaes', 'gustavo-henrique89@yahoo.com.br', '51 4682 1587', 'Viaduto Julia Vieira, 8', 'Ceará', 'Moraes do Galho', '37992-568', '39612075425'),
+	(14, 'Kaique Cardoso', 'xlima@caldeira.br', '61 1774 6818', 'Sítio Viana, 82', 'Piauí', 'Azevedo', '95247-761', '98507216420'),
+	(15, 'Júlia Lima', 'carvalhorebeca@bol.com.br', '31 1301-1697', 'Trevo Barbosa, 89', 'Goiás', 'Caldeira Paulista', '50585893', '86013945748'),
+	(16, 'Letícia Rodrigues', 'valentina14@pires.br', '(081) 9965 4288', 'Parque Campos, 3', 'Distrito Federal', 'Oliveira de Peixoto', '42358-345', '60527413925'),
+	(17, 'Mariana Gonçalves', 'fcardoso@yahoo.com.br', '81 5768 5756', 'Rua de da Cunha, 25', 'Roraima', 'Farias', '57738231', '68059712411'),
+	(18, 'Enzo Rocha', 'lucas-gabriel30@das.org', '+55 (031) 0716-1365', 'Rodovia Viana', 'Rio Grande do Norte', 'Pinto', '07770-629', '70956382410'),
+	(19, 'Dr. Enzo Gabriel Monteiro', 'fariascaroline@yahoo.com.br', '41 2225-3078', 'Travessa Ramos, 131', 'Alagoas', 'Carvalho da Serra', '99488868', '92483570674'),
+	(20, 'Thales Rodrigues', 'ncavalcanti@bol.com.br', '+55 (071) 2540 5667', 'Distrito de Pires, 18', 'Sergipe', 'Ramos da Mata', '10993254', '58907234647');
 
-INSERT INTO `concessionaria`.`funcionario` (`conta`, `agencia`) VALUES
-	('46815723909', 'da Mata'),
-	('28659743164', 'Cunha S/A'),
-	('94285016389', 'Gonçalves'),
-	('10738649520', 'Martins'),
-	('59476802111', 'Santos - EI'),
-	('74218690340', 'Costa S.A.'),
-	('91742053823', 'Lima'),
-	('49573268191', 'Alves'),
-	('63107952443', 'Viana'),
-	('83219740588', 'Farias Lopes Ltda.'),
-	('54936287083', 'Farias Farias Ltda.'),
-	('05348921750', 'da Cunha'),
-	('52937086438', 'da Costa S.A.'),
-	('06213957812', 'Novaes Pires S/A'),
-	('09476518294', 'Porto Moraes - EI'),
-	('02834976538', 'Castro - ME'),
-	('12937540805', 'Duarte'),
-	('18526439782', 'Rocha da Rocha Ltda.'),
-	('09614283769', 'Araújo'),
-	('15084326780', 'Monteiro - ME');
+INSERT INTO `concessionaria`.`funcionario` (`id`, `conta`, `agencia`) VALUES
+	(1, '39162075802', 'Nogueira'),
+	(2, '10274938588', 'Nascimento - ME'),
+	(3, '95836024774', 'Santos'),
+	(4, '06417382931', 'Azevedo S.A.'),
+	(5, '41908637269', 'Azevedo'),
+	(6, '24650987130', 'Costa'),
+	(7, '98517260449', 'da Rosa'),
+	(8, '95362784056', 'Rezende'),
+	(9, '23980746178', 'Carvalho'),
+	(10, '31867502968', 'Correia Ltda.'),
+	(11, '42635079838', 'Barbosa Castro - ME'),
+	(12, '34768952038', 'Campos'),
+	(13, '85126043951', 'Barbosa S.A.'),
+	(14, '62401985360', 'Gomes'),
+	(15, '17950843241', 'Costela Farias S.A.'),
+	(16, '63749012580', 'Melo'),
+	(17, '58029671377', 'da Rocha Ltda.'),
+	(18, '12360547844', 'Gomes Rocha Ltda.'),
+	(19, '78205943656', 'Freitas S/A'),
+	(20, '97380146548', 'Nascimento Ltda.');
 
-INSERT INTO `concessionaria`.`vendedor` (`qtdvendas`) VALUES
-	(8265),
-	(8161),
-	(5727),
-	(6878),
-	(319),
-	(1342),
-	(9222),
-	(9585),
-	(7033),
-	(5459),
-	(5517),
-	(2098),
-	(7686),
-	(4015),
-	(2923),
-	(1633),
-	(4631),
-	(9322),
-	(2827),
-	(3507);
+INSERT INTO `concessionaria`.`vendedor` (`id`, `qtdvendas`) VALUES
+	(10, 4130),
+	(12, 4547),
+	(5, 5785),
+	(3, 2945),
+	(9, 6396),
+	(13, 2787),
+	(4, 7867),
+	(20, 1879),
+	(8, 8007),
+	(15, 3422),
+	(8, 9493),
+	(12, 1664),
+	(16, 9721),
+	(12, 627),
+	(17, 119),
+	(5, 8285),
+	(19, 2330),
+	(2, 9796),
+	(13, 1721),
+	(14, 2976);
 
-INSERT INTO `concessionaria`.`comprador` (`qtdcompras`) VALUES
-	(9735),
-	(4053),
-	(753),
-	(2052),
-	(9280),
-	(6061),
-	(8410),
-	(4073),
-	(4869),
-	(6376),
-	(5703),
-	(8193),
-	(1766),
-	(699),
-	(294),
-	(6892),
-	(6298),
-	(9709),
-	(6793),
-	(6768);
+INSERT INTO `concessionaria`.`cliente` (`id`) VALUES
+	(1),
+	(2),
+	(3),
+	(4),
+	(5),
+	(6),
+	(7),
+	(8),
+	(9),
+	(10),
+	(11),
+	(12),
+	(13),
+	(14),
+	(15),
+	(16),
+	(17),
+	(18),
+	(19),
+	(20);
 
-INSERT INTO `concessionaria`.`nota_fiscal` (`data_emissao`, `valor`, `parcelas`) VALUES
-	('2007-01-01 02:57:58', 762558622501.54, 5476),
-	('2001-09-26 00:17:09', 294320442887568.0, 5929),
-	('2001-06-24 20:56:10', 892910369011.315, 4268),
-	('2004-09-21 08:37:08', -799.90037, 9262),
-	('1973-12-11 06:15:11', 85083921.8606, 3423),
-	('1971-02-11 17:03:21', 3113904913622.0, 6510),
-	('1994-07-14 05:34:21', -118800.95, 3269),
-	('2005-06-12 02:31:38', 9539360.0, 5472),
-	('2007-12-19 23:00:08', 1.3653355199, 4516),
-	('2019-10-19 20:56:04', -1173736121.491, 2553);
+INSERT INTO `concessionaria`.`gerente` (`id`) VALUES
+	(2),
+	(13),
+	(15),
+	(20),
+	(8),
+	(6),
+	(13),
+	(19),
+	(10),
+	(13),
+	(10),
+	(8),
+	(16),
+	(10),
+	(3),
+	(19),
+	(18),
+	(11),
+	(4),
+	(9);
 
-INSERT INTO `concessionaria`.`venda` (`quantidade`, `desconto`) VALUES
-	(2104, 122279.65066704),
-	(8955, -959347602.947),
-	(1216, 173041714468.9),
-	(8425, -366161002997581.0),
-	(1339, -832009912154.58);
+INSERT INTO `concessionaria`.`rh` (`id`) VALUES
+	(13),
+	(7),
+	(4),
+	(14),
+	(3),
+	(7),
+	(18),
+	(7),
+	(14),
+	(18),
+	(12),
+	(5),
+	(12),
+	(9),
+	(8),
+	(9),
+	(7),
+	(5),
+	(16),
+	(12);
 
-INSERT INTO `concessionaria`.`aquisicao` (`quantidade`) VALUES
-	(1196),
-	(1285),
-	(6177),
-	(6695),
-	(7824);
+INSERT INTO `concessionaria`.`comprador` (`id`, `qtdcompras`) VALUES
+	(9, 5964),
+	(15, 2093),
+	(8, 4325),
+	(20, 2975),
+	(17, 6806),
+	(15, 5199),
+	(3, 6916),
+	(16, 8896),
+	(19, 3782),
+	(9, 3380),
+	(12, 7506),
+	(4, 8551),
+	(8, 5624),
+	(13, 5452),
+	(1, 9283),
+	(19, 8593),
+	(20, 3205),
+	(19, 3066),
+	(8, 1352),
+	(14, 6891);
 
-INSERT INTO `concessionaria`.`patio` (`capacidade`, `cidade`, `estado`, `bairro`, `cep`) VALUES
-	(3092, 'Sales de Moura', 'Rondônia', 'Tokelau', '97590-543'),
-	(7210, 'Oliveira do Norte', 'Roraima', 'Arábia Saudita', '23369-124');
+INSERT INTO `concessionaria`.`nota_fiscal` (`id`, `data_emissao`, `valor`, `parcelas`) VALUES
+	(1, '2002-02-20 01:36:12', 66545773.908, 2183),
+	(2, '1977-07-05 07:19:54', -17668372686.79, 9842),
+	(3, '1975-07-22 17:13:46', 4538.89649842973, 3780),
+	(4, '2010-04-10 16:49:43', -320845498687.7, 4626),
+	(5, '1995-04-03 04:02:03', -5465526197219.37, 5721),
+	(6, '1974-12-27 17:32:25', 527289276.129272, 9819),
+	(7, '1996-10-24 23:11:26', 0.46738, 1181),
+	(8, '2008-05-15 08:31:42', -79365114491.7, 3894),
+	(9, '2006-06-08 08:34:00', 34802827.4, 323),
+	(10, '1999-05-13 17:31:43', -495.650044957, 5849);
 
-INSERT INTO `concessionaria`.`veiculo` (`quantidade`, `ano`, `modelo`, `cor`) VALUES
-	(3358, 7601, 'Pedro Henrique Duarte', '#5eef3e'),
-	(3511, 7986, 'João Gabriel Mendes', '#a8cc33'),
-	(864, 1908, 'Emanuella Fogaça', '#b73a6e'),
-	(2022, 4537, 'Laura da Mota', '#54ceb0'),
-	(821, 3625, 'Vitor Gabriel Fogaça', '#d03cd8'),
-	(8160, 6401, 'Alexia Cardoso', '#7f32a8'),
-	(7283, 6308, 'Lorena Caldeira', '#81f9ed'),
-	(8146, 8187, 'Maria Clara Caldeira', '#cc0e9c'),
-	(7925, 1847, 'Emanuel Vieira', '#f9ebc2'),
-	(2163, 7837, 'Danilo Peixoto', '#07ccea'),
-	(6941, 6707, 'Benício da Cruz', '#66820d'),
-	(2769, 6213, 'Isabelly Porto', '#f48ba9'),
-	(9046, 2121, 'Srta. Luiza Carvalho', '#dd64ef'),
-	(4727, 5475, 'Sr. Gabriel Gonçalves', '#ccf8ff'),
-	(2876, 6869, 'Davi Lima', '#1f4b91'),
-	(2077, 2175, 'Larissa Ferreira', '#54dee5'),
-	(9957, 6735, 'Cauã Caldeira', '#152b72'),
-	(4916, 5110, 'Gabrielly Pinto', '#3bbf65'),
-	(3963, 7678, 'Carlos Eduardo da Rosa', '#69ef7f'),
-	(6642, 3485, 'Ana da Luz', '#ffc9dd');
+INSERT INTO `concessionaria`.`venda` (`id`, `quantidade`, `desconto`) VALUES
+	(10, 2114, -8840.5),
+	(5, 7474, -1683333281570.1),
+	(4, 8757, 5344.26769671104),
+	(6, 8048, -529.4122),
+	(5, 1382, 97258468610731.5);
 
-INSERT INTO `concessionaria`.`meta_de_vendas` (`quantidade_automoveis_vendidos`, `mes`) VALUES
-	(486, '05'),
-	(4302, '01'),
-	(7279, '07'),
-	(8950, '05'),
-	(6031, '04');
+INSERT INTO `concessionaria`.`aquisicao` (`id`, `comprador`, `quantidade`, `nota_fiscal`) VALUES
+	(1, 19, 1242, 5),
+	(2, 20, 2170, 2),
+	(3, 3, 842, 5),
+	(4, 15, 4399, 4),
+	(5, 13, 2679, 8);
 
-INSERT INTO `concessionaria`.`bonificacao` (`data_bonificacao`, `valor`) VALUES
-	('1998-12-12 16:07:30', -854347.327),
-	('2011-06-22 00:09:14', 7193342553532.1),
-	('1993-11-23 23:37:19', 90940615817.42),
-	('2017-11-02 19:12:35', -97668772816001.2),
-	('1975-06-05 03:32:00', -4773739023.2573);
+INSERT INTO `concessionaria`.`patio` (`id`, `capacidade`, `cidade`, `estado`, `bairro`, `cep`) VALUES
+	(1, 1334, 'da Mota', 'Paraíba', 'Samoa Americana', '00306780'),
+	(2, 9506, 'Lima das Pedras', 'Santa Catarina', 'Domínica', '98051-601');
+
+INSERT INTO `concessionaria`.`veiculo` (`id`, `quantidade`, `ano`, `modelo`, `cor`, `aquisicao`, `venda`, `patio`) VALUES
+	(1, 3970, 8874, 'Luigi Pereira', '#dd44ba', 5, 2, 2),
+	(2, 2075, 8303, 'Otávio Nunes', '#b1dd42', 4, 2, 1),
+	(3, 8613, 3843, 'Eduarda Dias', '#f49fab', 3, 5, 2),
+	(4, 5029, 3934, 'Bernardo das Neves', '#adea6b', 5, 3, 1),
+	(5, 781, 5539, 'Arthur da Costa', '#094299', 5, 3, 2),
+	(6, 5287, 4849, 'João Vitor das Neves', '#766ae2', 4, 3, 2),
+	(7, 6629, 4244, 'Arthur da Cruz', '#c627db', 3, 3, 1),
+	(8, 1619, 2188, 'Emanuel Barbosa', '#4ef4cd', 3, 5, 1),
+	(9, 4250, 5961, 'Gabriel Correia', '#ffeecc', 1, 1, 2),
+	(10, 4831, 7882, 'Maria Clara Cavalcanti', '#f7fcab', 4, 1, 2),
+	(11, 8973, 1146, 'Isabelly Nogueira', '#d6ed93', 5, 3, 1),
+	(12, 3577, 4301, 'João Guilherme Rodrigues', '#e2ed93', 3, 4, 2),
+	(13, 975, 4591, 'Juliana Gonçalves', '#e894a1', 5, 5, 2),
+	(14, 6228, 4861, 'Brenda da Luz', '#22f922', 2, 2, 1),
+	(15, 9713, 2208, 'Alexia Lopes', '#143fb7', 4, 2, 1),
+	(16, 5313, 5314, 'Eloah da Conceição', '#2ae08e', 2, 2, 1),
+	(17, 2771, 5759, 'Raul Mendes', '#d3720a', 5, 2, 1),
+	(18, 1546, 1523, 'Lívia das Neves', '#23d1b7', 5, 1, 1),
+	(19, 5155, 1776, 'Yasmin Santos', '#ef8daf', 1, 1, 2),
+	(20, 6398, 6363, 'Igor Lima', '#a51b0e', 4, 4, 2);
+
+INSERT INTO `concessionaria`.`meta_de_vendas` (`id`, `quantidade_automoveis_vendidos`, `mes`, `gerente`) VALUES
+	(1, 69, '04', 16),
+	(2, 8295, '04', 9),
+	(3, 6172, '04', 19),
+	(4, 2732, '07', 7),
+	(5, 9566, '06', 9);
+
+INSERT INTO `concessionaria`.`nota_fiscal_aquisicao` (`id`) VALUES
+	(9),
+	(8),
+	(10),
+	(4),
+	(3);
+
+INSERT INTO `concessionaria`.`nota_fiscal_venda` (`id`) VALUES
+	(6),
+	(4),
+	(2),
+	(7),
+	(5);
+
+INSERT INTO `concessionaria`.`gerenciamento_funcionario` (`id`, `rh`, `funcionario`) VALUES
+	(4, 9, 1),
+	(10, 1, 14),
+	(1, 12, 6),
+	(10, 2, 9),
+	(8, 6, 2),
+	(4, 17, 1),
+	(9, 14, 8),
+	(10, 8, 14),
+	(9, 19, 9),
+	(8, 2, 2),
+	(1, 18, 18),
+	(3, 6, 1),
+	(7, 15, 8),
+	(6, 11, 20),
+	(1, 4, 11),
+	(10, 15, 20),
+	(5, 19, 1),
+	(10, 16, 16),
+	(6, 15, 8),
+	(6, 1, 14);
+
+INSERT INTO `concessionaria`.`bonificacao` (`id`, `data_bonificacao`, `valor`, `gerente`, `funcionario`) VALUES
+	(1, '1980-08-06 02:09:32', -102359.1054283, 2, 17),
+	(2, '1991-11-20 00:42:09', -32480255032.0, 9, 17),
+	(3, '1976-07-19 23:46:23', 94771.62986111, 20, 10),
+	(4, '1995-11-30 03:52:36', 3784193.697, 19, 13),
+	(5, '2010-12-24 17:28:39', -994387634092040.0, 13, 1);
 
 INSERT INTO `concessionaria`.`pagamento` (`data`, `valor`, `rh`, `funcionario`) VALUES
-	('2008-07-08 07:54:12', 6636745.0, 4765, 4597),
-	('1996-03-16 15:36:17', 841.747124184157, 9116, 1678),
-	('2012-12-28 15:28:21', 8487375762205.8, 3920, 2464),
-	('1995-01-25 14:16:21', -43139105.977, 8303, 91),
-	('1982-06-12 19:43:57', 288785.22745185, 1205, 6229),
-	('1996-08-28 23:21:07', -6739819.332, 7382, 7331),
-	('1982-09-16 09:51:54', 310663090808.88, 6245, 2626),
-	('1990-05-07 16:25:58', 77517664.0, 9334, 6675),
-	('1970-02-25 21:23:21', -5836467999468.1, 5662, 8907),
-	('1991-11-10 00:30:48', -61529502267.3, 6364, 9939),
-	('2004-04-21 22:15:56', -290.39, 7499, 2131),
-	('1995-07-26 13:16:20', -53714370.4645, 466, 6490),
-	('2014-11-22 12:10:25', 9.0, 7780, 4950),
-	('1991-02-24 09:30:45', -672561.2976377, 3171, 3054),
-	('1998-05-07 06:50:22', 464854798716995.0, 7542, 3832),
-	('2013-01-03 10:14:15', -272204061967415.0, 5180, 612),
-	('2003-05-13 17:17:34', -8059945.0, 6217, 7872),
-	('1999-02-26 09:19:36', 353456475064459.0, 721, 1778),
-	('2013-01-11 20:02:15', 82710.15279318, 8912, 6422),
-	('1970-07-09 20:03:59', -803722.0, 2636, 7860);
+	('1982-09-05 08:44:36', 9.87451202, 7108, 8736),
+	('1972-11-13 08:38:41', 1213923079597.0, 225, 8515),
+	('2014-10-16 06:02:45', -1714703900.0, 8420, 2222),
+	('1993-04-15 22:18:27', -992513926398.2, 2550, 8258),
+	('1990-06-18 06:33:44', 5.925681121, 5555, 1346),
+	('1982-12-03 00:46:21', -2.11, 360, 8383),
+	('2003-03-21 15:35:59', -3.4973371012, 1537, 4322),
+	('1994-04-07 23:33:57', 73.4, 8372, 3226),
+	('1981-05-08 20:40:29', 44400239.6, 4829, 8445),
+	('2017-01-09 07:37:58', 97.950357665, 8122, 3509),
+	('2019-01-13 12:02:28', 900124655563061.0, 7014, 7650),
+	('2020-04-13 12:03:57', -72637075.321, 6321, 2173),
+	('1989-02-17 15:31:27', 48371332711972.6, 334, 7058),
+	('2010-01-04 01:10:30', 98743787791.2315, 4473, 1320),
+	('1985-08-16 00:55:59', -9938.0, 7599, 8947),
+	('1999-02-17 12:34:29', 4.2555924823087, 752, 357),
+	('2010-08-25 02:23:52', 34542.11011, 5865, 6968),
+	('2014-02-12 15:08:39', 72763833228297.0, 3656, 2983),
+	('1988-01-22 03:28:19', 84962.6516781, 4561, 306),
+	('1971-04-29 21:20:21', 6531037671980.0, 8014, 5182);
 

@@ -1,144 +1,6 @@
-DROP DATABASE IF EXISTS concessionaria;
-CREATE DATABASE concessionaria;
-USE concessionaria;
 
-CREATE TABLE `concessionaria`.`pessoa` (
-	`id` INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
-	`nome` VARCHAR(255),
-	`email` VARCHAR(255),
-	`telefone` VARCHAR(255),
-	`rua` VARCHAR(255),
-	`estado` VARCHAR(2),
-	`cidade` VARCHAR(2),
-	`cep` VARCHAR(2),
-	`cpf_cnpj` VARCHAR(2)
-);
 
-CREATE TABLE `concessionaria`.`funcionario` (
-	`id` INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
-	`conta` VARCHAR(2),
-	`agencia` VARCHAR(4)
-);
-
-CREATE TABLE `concessionaria`.`vendedor` (
-	`id` INT,
-	FOREIGN KEY (id) REFERENCES funcionario(id),
-	`qtdvendas` INT
-);
-
-CREATE TABLE `concessionaria`.`cliente` (
-	`id` INT PRIMARY KEY AUTO_INCREMENT NOT NULL
-);
-
-CREATE TABLE `concessionaria`.`gerente` (
-	`id` INT,
-	FOREIGN KEY (id) REFERENCES funcionario(id)
-);
-
-CREATE TABLE `concessionaria`.`rh` (
-	`id` INT,
-	FOREIGN KEY (id) REFERENCES funcionario(id)
-);
-
-CREATE TABLE `concessionaria`.`comprador` (
-	`id` INT,
-	FOREIGN KEY (id) REFERENCES funcionario(id),
-	`qtdcompras` INT
-);
-
-CREATE TABLE `concessionaria`.`nota_fiscal` (
-	`id` INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
-	`data_emissao` DATE,
-	`valor` FLOAT,
-	`parcelas` INT
-);
-
-CREATE TABLE `concessionaria`.`venda` (
-	`id` INT,
-	FOREIGN KEY (id) REFERENCES nota_fiscal(id),
-	`quantidade` INT,
-	`desconto` FLOAT
-);
-
-CREATE TABLE `concessionaria`.`aquisicao` (
-	`id` INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
-	`comprador` INT,
-	FOREIGN KEY (comprador) REFERENCES comprador(id),
-	`quantidade` INT,
-	`nota_fiscal` INT,
-	FOREIGN KEY (nota_fiscal) REFERENCES nota_fiscal(id)
-);
-
-CREATE TABLE `concessionaria`.`patio` (
-	`id` INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
-	`capacidade` INT,
-	`cidade` VARCHAR(255),
-	`estado` VARCHAR(50),
-	`bairro` VARCHAR(255),
-	`cep` VARCHAR(10)
-);
-
-CREATE TABLE `concessionaria`.`veiculo` (
-	`id` INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
-	`quantidade` INT,
-	`ano` INT,
-	`modelo` VARCHAR(255),
-	`cor` VARCHAR(255),
-	`aquisicao` INT,
-	FOREIGN KEY (aquisicao) REFERENCES aquisicao(id),
-	`venda` INT,
-	FOREIGN KEY (venda) REFERENCES venda(id),
-	`patio` INT,
-	FOREIGN KEY (patio) REFERENCES patio(id)
-);
-
-CREATE TABLE `concessionaria`.`meta_de_vendas` (
-	`id` INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
-	`quantidade_automoveis_vendidos` INT,
-	`mes` DATE,
-	`gerente` INT,
-	FOREIGN KEY (gerente) REFERENCES gerente(id)
-);
-
-CREATE TABLE `concessionaria`.`nota_fiscal_aquisicao` (
-	`id` INT,
-	FOREIGN KEY (id) REFERENCES nota_fiscal(id)
-);
-
-CREATE TABLE `concessionaria`.`nota_fiscal_venda` (
-	`id` INT,
-	FOREIGN KEY (id) REFERENCES nota_fiscal(id)
-);
-
-CREATE TABLE `concessionaria`.`gerenciamento_funcionario` (
-	`id` INT,
-	FOREIGN KEY (id) REFERENCES nota_fiscal(id),
-	`rh` INT,
-	FOREIGN KEY (rh) REFERENCES rh(id),
-	`funcionario` INT,
-	FOREIGN KEY (funcionario) REFERENCES funcionario(id)
-);
-
-CREATE TABLE `concessionaria`.`bonificacao` (
-	`id` INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
-	`data_bonificacao` DATE,
-	`valor` FLOAT,
-	`gerente` INT,
-	FOREIGN KEY (gerente) REFERENCES gerente(id),
-	`funcionario` INT,
-	FOREIGN KEY (funcionario) REFERENCES funcionario(id)
-);
-
-CREATE TABLE `concessionaria`.`pagamento` (
-	`data` DATE,
-	`valor` FLOAT,
-	`rh` FLOAT,
-	`funcionario` FLOAT
-);
-
-USE concessionaria;
-
-INSERT INTO `concessionaria`.`pessoa` (`id`, `nome`, `email`, `telefone`, `rua`, `estado`, `cidade`, `cep`, `cpf_cnpj`) VALUES
+INSERT INTO trabalho_concessionaria.pessoa (id, nome, email, telefone, rua, estado, cidade, cep, cpf_cnpj) VALUES
 	(1, 'Leandro da Paz', 'tmoura@bol.com.br', '(081) 2453-5544', 'Chácara Fernandes, 56', 'Ceará', 'da Conceição', '75047-441', '40385269170'),
 	(2, 'Lorena Rodrigues', 'pfogaca@araujo.org', '(051) 3063-4495', 'Viaduto Ana Sophia Caldeira, 785', 'Sergipe', 'Nascimento do Sul', '46261-013', '64015738217'),
 	(3, 'Guilherme Moraes', 'luiz-fernando65@bol.com.br', '71 1614-3186', 'Via Kamilly Santos, 1', 'Rio de Janeiro', 'Oliveira', '70497-610', '73506124862'),
@@ -181,7 +43,7 @@ INSERT INTO `concessionaria`.`pessoa` (`id`, `nome`, `email`, `telefone`, `rua`,
 	(40, 'Laura da Paz', 'marcelalima@da.org', '+55 31 1503-0049', 'Residencial da Cunha, 18', 'Mato Grosso do Sul', 'Lima de Oliveira', '50093668', '51476028362');
 
 
-INSERT INTO concessionaria.funcionario (id, conta, agencia) VALUES
+INSERT INTO trabalho_concessionaria.funcionario (id, conta, agencia) VALUES
     (1, 1022737-7, 1467),
     (2, 0432483-8, 0519),
     (3, 43792159-1, 3369),
@@ -203,7 +65,7 @@ INSERT INTO concessionaria.funcionario (id, conta, agencia) VALUES
     (19, 0600532-2, 2505),
     (20, 05492-4, 8854);
 
-INSERT INTO `concessionaria`.`vendedor` (`id`, `qtdvendas`) VALUES
+INSERT INTO trabalho_concessionaria.vendedor (id, qtdvendas) VALUES
 	(10, 5),
 	(12, 6),
 	(5, 3),
@@ -225,7 +87,7 @@ INSERT INTO `concessionaria`.`vendedor` (`id`, `qtdvendas`) VALUES
 	(13, 1),
 	(14, 2);
 
-INSERT INTO `concessionaria`.`cliente` (`id`) VALUES
+INSERT INTO trabalho_concessionaria.cliente (id) VALUES
 	(21),
 	(22),
 	(23),
@@ -247,7 +109,7 @@ INSERT INTO `concessionaria`.`cliente` (`id`) VALUES
 	(39),
 	(40);
 
-INSERT INTO `concessionaria`.`gerente` (`id`) VALUES
+INSERT INTO trabalho_concessionaria.gerente (id) VALUES
 	(2),
 	(13),
 	(15),
@@ -269,7 +131,7 @@ INSERT INTO `concessionaria`.`gerente` (`id`) VALUES
 	(4),
 	(9);
 
-INSERT INTO `concessionaria`.`rh` (`id`) VALUES
+INSERT INTO trabalho_concessionaria.rh (id) VALUES
 	(13),
 	(7),
 	(4),
@@ -291,7 +153,7 @@ INSERT INTO `concessionaria`.`rh` (`id`) VALUES
 	(16),
 	(12);
 
-INSERT INTO `concessionaria`.`comprador` (`id`, `qtdcompras`) VALUES
+INSERT INTO trabalho_concessionaria.comprador (id, qtdcompras) VALUES
 	(9, 5),
 	(15, 20),
 	(8, 4),
@@ -313,7 +175,7 @@ INSERT INTO `concessionaria`.`comprador` (`id`, `qtdcompras`) VALUES
 	(8, 13),
 	(14, 6);
 
-INSERT INTO `concessionaria`.`nota_fiscal` (`id`, `data_emissao`, `valor`, `parcelas`) VALUES
+INSERT INTO trabalho_concessionaria.nota_fiscal (id, data_emissao, valor, parcelas) VALUES
 	(1, '2002-02-20 01:36:12', 45773.90, 20),
 	(2, '1977-07-05 07:19:54', 372686.79, 10),
 	(3, '1975-07-22 17:13:46', 45738.89, 6),
@@ -325,25 +187,25 @@ INSERT INTO `concessionaria`.`nota_fiscal` (`id`, `data_emissao`, `valor`, `parc
 	(9, '2006-06-08 08:34:00', 802827.4, 12),
 	(10, '1999-05-13 17:31:43', 49655.65, 10);
 
-INSERT INTO `concessionaria`.`venda` (`id`, `quantidade`, `desconto`) VALUES
+INSERT INTO trabalho_concessionaria.venda (id, quantidade, desconto) VALUES
 	(30, 2, 0.25),
 	(25, 7, 0.15),
 	(24, 8, 0.2),
 	(26, 8, 0.1),
 	(25, 1, 0.35);
 
-INSERT INTO `concessionaria`.`aquisicao` (`id`, `comprador`, `quantidade`, `nota_fiscal`) VALUES
+INSERT INTO trabalho_concessionaria.aquisicao (id, comprador, quantidade, nota_fiscal) VALUES
 	(1, 19, 12, 5),
 	(2, 20, 2, 2),
 	(3, 3, 8, 5),
 	(4, 15, 4, 4),
 	(5, 13, 2, 8);
 
-INSERT INTO `concessionaria`.`patio` (`id`, `capacidade`, `cidade`, `estado`, `bairro`, `cep`) VALUES
+INSERT INTO trabalho_concessionaria.patio (id, capacidade, cidade, estado, bairro, cep) VALUES
 	(1, 1334, 'da Mota', 'Paraíba', 'Samoa Americana', '00306780'),
 	(2, 9506, 'Lima das Pedras', 'Santa Catarina', 'Domínica', '98051-601');
 
-INSERT INTO `concessionaria`.`veiculo` (`id`, `quantidade`, `ano`, `modelo`, `cor`, `aquisicao`, `venda`, `patio`, tipo) VALUES
+INSERT INTO trabalho_concessionaria.veiculo (id, quantidade, ano, modelo, cor, aquisicao, venda, patio, tipo) VALUES
 	(1, 31, 2010, 'Luigi Pereira', 'Cinza', 5, 2, 2, 'Carro'),
 	(2, 23, 2018, 'Otávio Nunes', 'Preto', 4, 2, 1, 'Moto'),
 	(3, 48, 2016, 'Eduarda Dias', 'Branco', 3, 5, 2, 'Carro'),
@@ -365,28 +227,28 @@ INSERT INTO `concessionaria`.`veiculo` (`id`, `quantidade`, `ano`, `modelo`, `co
 	(19, 55, 2015, 'Yasmin Santos', 'Branco', 1, 1, 2, 'Moto'),
 	(20, 68, 2013, 'Igor Lima', 'Preto', 4, 4, 2, 'Moto');
 
-INSERT INTO `concessionaria`.`meta_de_vendas` (`id`, `quantidade_automoveis_vendidos`, `mes`, `gerente`) VALUES
+INSERT INTO trabalho_concessionaria.meta_de_vendas (id, quantidade_automoveis_vendidos, mes, gerente) VALUES
 	(1, 69, '04', 16),
 	(2, 85, '04', 9),
 	(3, 62, '04', 19),
 	(4, 22, '07', 7),
 	(5, 95, '06', 9);
 
-INSERT INTO `concessionaria`.`nota_fiscal_aquisicao` (`id`) VALUES
+INSERT INTO trabalho_concessionaria.nota_fiscal_aquisicao (id) VALUES
 	(9),
 	(8),
 	(10),
 	(4),
 	(3);
 
-INSERT INTO `concessionaria`.`nota_fiscal_venda` (`id`) VALUES
+INSERT INTO trabalho_concessionaria.nota_fiscal_venda (id) VALUES
 	(6),
 	(4),
 	(2),
 	(7),
 	(5);
 
-INSERT INTO `concessionaria`.`gerenciamento_funcionario` (`id`, `rh`, `funcionario`) VALUES
+INSERT INTO trabalho_concessionaria.gerenciamento_funcionario (id, rh, funcionario) VALUES
 	(4, 9, 1),
 	(10, 1, 14),
 	(1, 12, 6),
@@ -408,14 +270,14 @@ INSERT INTO `concessionaria`.`gerenciamento_funcionario` (`id`, `rh`, `funcionar
 	(6, 15, 8),
 	(6, 1, 14);
 
-INSERT INTO `concessionaria`.`bonificacao` (`id`, `data_bonificacao`, `valor`, `gerente`, `funcionario`) VALUES
+INSERT INTO trabalho_concessionaria.bonificacao (id, data_bonificacao, valor, gerente, funcionario) VALUES
 	(1, '2020-08-06 02:09:32', 2359.10, 2, 17),
 	(2, '2020-11-20 00:42:09', 5032.0, 9, 17),
 	(3, '2020-07-19 23:46:23', 94771.62, 20, 10),
 	(4, '2020-11-30 03:52:36', 84193.69, 19, 13),
 	(5, '2020-12-24 17:28:39', 092040.0, 13, 1);
 
-INSERT INTO concessionaria.pagamento (id, data, valor, rh, funcionario) VALUES
+INSERT INTO trabalho_concessionaria.pagamento (id, data, valor, rh, funcionario) VALUES
     (1, '2017-09-05 08:44:36',2000, 3, 14),
     (2, '2017-11-13 08:38:41', 2000, 4, 13),
     (3, '2017-10-16 06:02:45', 1050, 5, 12),

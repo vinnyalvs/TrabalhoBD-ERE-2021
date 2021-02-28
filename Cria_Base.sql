@@ -4,218 +4,214 @@ DROP TABLE  IF EXISTS cliente;
 DROP TABLE  IF EXISTS funcionario;
 DROP TABLE  IF EXISTS vendedor;
 
+CREATE SCHEMA trabalho_concessionaria;
 
-CREATE TABLE pessoa (
-  id mediumint(8) unsigned NOT NULL auto_increment,
+CREATE TABLE trabalho_concessionaria.pessoa (
+  id mediumint(8) NOT NULL ,
   nome varchar(255) default NULL,
   email varchar(255) default NULL,
   telefone varchar(100) default NULL,
   rua varchar(255) default NULL,
   cidade varchar(255),
   estado varchar(50) default NULL,
-  bairro varchar(255) default NULL,
   cep varchar(10) default NULL,
   cpf_cnpj varchar(14) default NULL,
   PRIMARY KEY (id)
-) AUTO_INCREMENT=1;
+) ;
 
-CREATE TABLE cliente
+CREATE TABLE trabalho_concessionaria.cliente
 (
-    id mediumint(8) unsigned NOT NULL,
+    id mediumint(8) NOT NULL,
     PRIMARY KEY (id),
-    FOREIGN KEY (id) REFERENCES pessoa(id) 
+    FOREIGN KEY (id) REFERENCES trabalho_concessionaria.pessoa(id) 
         ON UPDATE CASCADE
         ON DELETE CASCADE
 );
 
-CREATE TABLE funcionario
+CREATE TABLE trabalho_concessionaria.funcionario
 (
-    id mediumint(8) unsigned NOT NULL,
+    id mediumint(8) NOT NULL,
     conta varchar(6) NOT NULL,
     agencia varchar(4) NOT NULL,
     PRIMARY KEY (id),
-    FOREIGN KEY (id) REFERENCES pessoa(id) 
+    FOREIGN KEY (id) REFERENCES trabalho_concessionaria.pessoa(id) 
         ON UPDATE CASCADE
         ON DELETE CASCADE
 );
 
-CREATE TABLE gerente
+CREATE TABLE trabalho_concessionaria.gerente
 (
-    id mediumint(8) unsigned NOT NULL,
+    id mediumint(8) NOT NULL,
     PRIMARY KEY (id),
-    FOREIGN KEY (id) REFERENCES funcionario(id) 
+    FOREIGN KEY (id) REFERENCES trabalho_concessionaria.funcionario(id) 
         ON UPDATE CASCADE
         ON DELETE CASCADE
 );
 
-CREATE TABLE rh
+CREATE TABLE trabalho_concessionaria.rh
 (
-    id mediumint(8) unsigned NOT NULL,
+    id mediumint(8) NOT NULL,
     PRIMARY KEY (id),
-    FOREIGN KEY (id) REFERENCES funcionario(id) 
+    FOREIGN KEY (id) REFERENCES trabalho_concessionaria.funcionario(id) 
         ON UPDATE CASCADE
         ON DELETE CASCADE
 );
 
-CREATE TABLE vendedor
+CREATE TABLE trabalho_concessionaria.vendedor
 (
-    id mediumint(8) unsigned NOT NULL,
-    qtdvendas int(8) unsigned default 0,
+    id mediumint(8) NOT NULL,
+    qtdvendas int(8) default 0,
     PRIMARY KEY (id),
-    FOREIGN KEY (id) REFERENCES funcionario(id) 
+    FOREIGN KEY (id) REFERENCES trabalho_concessionaria.funcionario(id) 
         ON UPDATE CASCADE
         ON DELETE CASCADE
 );
 
-CREATE TABLE comprador
+CREATE TABLE trabalho_concessionaria.comprador
 (
-    id mediumint(8) unsigned NOT NULL,
-    qtdcompras int unsigned default 0,
+    id mediumint(8) NOT NULL,
+    qtdcompras int default 0,
     PRIMARY KEY (id),
-    FOREIGN KEY (id) REFERENCES funcionario(id) 
+    FOREIGN KEY (id) REFERENCES trabalho_concessionaria.funcionario(id) 
         ON UPDATE CASCADE
         ON DELETE CASCADE
 );
 
-CREATE TABLE nota_fiscal
+CREATE TABLE trabalho_concessionaria.nota_fiscal
 (
-    id mediumint(8) unsigned NOT NULL AUTO_INCREMENT,
+    id mediumint(8) NOT NULL ,
     data_emissao date,
     valor float,
     parcelas tinyint,
     PRIMARY KEY (id)
 );
 
-CREATE TABLE nota_fiscal_aquisicao
+CREATE TABLE trabalho_concessionaria.nota_fiscal_aquisicao
 (
-    id mediumint(8) unsigned NOT NULL,
+    id mediumint(8) NOT NULL,
     PRIMARY KEY (id),
-    FOREIGN KEY (id) REFERENCES nota_fiscal(id) 
+    FOREIGN KEY (id) REFERENCES trabalho_concessionaria.nota_fiscal(id) 
         ON UPDATE CASCADE
         ON DELETE CASCADE
 );
 
-CREATE TABLE nota_fiscal_venda
+CREATE TABLE trabalho_concessionaria.nota_fiscal_venda
 (
-    id mediumint(8) unsigned NOT NULL,
+    id mediumint(8) NOT NULL,
     PRIMARY KEY (id),
-    FOREIGN KEY (id) REFERENCES nota_fiscal(id) 
+    FOREIGN KEY (id) REFERENCES trabalho_concessionaria.nota_fiscal(id) 
         ON UPDATE CASCADE
         ON DELETE CASCADE
 );
 
 
-CREATE TABLE venda
+CREATE TABLE trabalho_concessionaria.venda
 (
-    id mediumint(8) unsigned NOT NULL AUTO_INCREMENT,
-    quantidade int(8) unsigned default 0,
-    cliente mediumint(8) unsigned NOT NULL,
-    vendedor mediumint(8) unsigned NOT NULL,
-    nota_fiscal mediumint(8) unsigned NOT NULL,
+    id mediumint(8) NOT NULL ,
+    quantidade int(8) default 0,
+    cliente mediumint(8) NOT NULL,
+    vendedor mediumint(8) NOT NULL,
+    nota_fiscal mediumint(8) NOT NULL,
     desconto float default 0,
   	PRIMARY KEY (id),
-    FOREIGN KEY (cliente) REFERENCES cliente(id) 
+    FOREIGN KEY (cliente) REFERENCES trabalho_concessionaria.cliente(id) 
         ON UPDATE CASCADE
         ON DELETE CASCADE,
-    FOREIGN KEY (vendedor) REFERENCES vendedor(id) 
+    FOREIGN KEY (vendedor) REFERENCES trabalho_concessionaria.vendedor(id) 
         ON UPDATE CASCADE
         ON DELETE CASCADE,
-    FOREIGN KEY (nota_fiscal) REFERENCES nota_fiscal_venda(id) 
+    FOREIGN KEY (nota_fiscal) REFERENCES trabalho_concessionaria.nota_fiscal_venda(id) 
         ON UPDATE CASCADE
         ON DELETE CASCADE
-) AUTO_INCREMENT=1;
+) ;
 
-CREATE TABLE aquisicao
+CREATE TABLE trabalho_concessionaria.aquisicao
 (
-    id mediumint(8) unsigned NOT NULL AUTO_INCREMENT,
-    quantidade int(8) unsigned default 0,
-    comprador mediumint(8) unsigned NOT NULL,
-    nota_fiscal mediumint(8) unsigned NOT NULL,
+    id mediumint(8) NOT NULL ,
+    quantidade int(8) default 0,
+    comprador mediumint(8) NOT NULL,
+    nota_fiscal mediumint(8) NOT NULL,
   	PRIMARY KEY (id),
-    FOREIGN KEY (comprador) REFERENCES comprador(id) 
+    FOREIGN KEY (comprador) REFERENCES trabalho_concessionaria.comprador(id) 
         ON UPDATE CASCADE
         ON DELETE CASCADE,
-    FOREIGN KEY (nota_fiscal) REFERENCES nota_fiscal_aquisicao(id) 
+    FOREIGN KEY (nota_fiscal) REFERENCES trabalho_concessionaria.nota_fiscal_aquisicao(id) 
         ON UPDATE CASCADE
         ON DELETE CASCADE
-) AUTO_INCREMENT=1;
+) ;
 
 
-CREATE TABLE patio
+CREATE TABLE trabalho_concessionaria.patio
 (
-    id mediumint(8) unsigned NOT NULL AUTO_INCREMENT,
+    id mediumint(8) NOT NULL ,
     nome varchar(255) default NULL,
-    capacidade int(8) unsigned default 10,
+    capacidade int(8) default 10,
     cidade varchar(255) default NULL,
     estado varchar(50) default NULL,
     bairro varchar(255) default NULL,
     cep varchar(10) default NULL,
     PRIMARY KEY (id)
-) AUTO_INCREMENT=1;
+) ;
 
 
-CREATE TABLE veiculo
+CREATE TABLE trabalho_concessionaria.veiculo
 (
-    id mediumint(8) unsigned NOT NULL AUTO_INCREMENT,
-    quantidade int(8) unsigned default 1,
-    ano tinyint unsigned default NULL,
+    id mediumint(8) NOT NULL ,
+    quantidade int(8) default 1,
+    ano tinyint default NULL,
     modelo varchar(255) default NULL,
     cor varchar(255) default NULL,
     tipo varchar(255) default NULL,
-    aquisicao mediumint(8) unsigned NOT NULL,
-    venda mediumint(8) unsigned default NULL,
-    patio mediumint(8) unsigned NOT NULL,
+    aquisicao mediumint(8) NOT NULL,
+    venda mediumint(8) default NULL,
+    patio mediumint(8) NOT NULL,
   	PRIMARY KEY (id),
-    FOREIGN KEY (aquisicao) REFERENCES aquisicao(id),
-    FOREIGN KEY (patio) REFERENCES patio(id),
-    FOREIGN KEY (venda) REFERENCES venda(id)
+    FOREIGN KEY (aquisicao) REFERENCES trabalho_concessionaria.aquisicao(id),
+    FOREIGN KEY (patio) REFERENCES trabalho_concessionaria.patio(id),
+    FOREIGN KEY (venda) REFERENCES trabalho_concessionaria.venda(id)
 
-) AUTO_INCREMENT=1;
+) ;
 
-CREATE TABLE meta_de_vendas
+CREATE TABLE trabalho_concessionaria.meta_de_vendas
 (
-    id mediumint(8) unsigned NOT NULL AUTO_INCREMENT,
-    quantidade_automoveis_vendidos int(8) unsigned default 1,
+    id mediumint(8) NOT NULL ,
+    quantidade_automoveis_vendidos int(8) default 1,
     mes date default NULL,
-    gerente mediumint(8) unsigned NOT NULL,
+    gerente mediumint(8) NOT NULL,
   	PRIMARY KEY (id),
-    FOREIGN KEY (gerente) REFERENCES gerente(id)
-) AUTO_INCREMENT=1; 
+    FOREIGN KEY (gerente) REFERENCES trabalho_concessionaria.gerente(id)
+) ; 
 
-CREATE TABLE bonificacao
+CREATE TABLE trabalho_concessionaria.bonificacao
 (
-    id mediumint(8) unsigned NOT NULL AUTO_INCREMENT,
+    id mediumint(8) NOT NULL ,
     data_bonificacao date default NULL,
     valor float default 0,
-    gerente mediumint(8) unsigned NOT NULL,
-    funcionario mediumint(8) unsigned NOT NULL,
+    gerente mediumint(8) NOT NULL,
+    funcionario mediumint(8) NOT NULL,
   	PRIMARY KEY (id),
-    FOREIGN KEY (gerente) REFERENCES gerente(id),
-    FOREIGN KEY (funcionario) REFERENCES funcionario(id)
-) AUTO_INCREMENT=1;
+    FOREIGN KEY (gerente) REFERENCES trabalho_concessionaria.gerente(id),
+    FOREIGN KEY (funcionario) REFERENCES trabalho_concessionaria.funcionario(id)
+) ;
 
-CREATE TABLE pagamento
+CREATE TABLE trabalho_concessionaria.pagamento
 (
-    id mediumint(8) unsigned NOT NULL AUTO_INCREMENT,
+    id mediumint(8) NOT NULL ,
     data_pagamento date default NULL,
     valor float default 0,
-    rh mediumint(8) unsigned NOT NULL,
-    funcionario mediumint(8) unsigned NOT NULL,
+    rh mediumint(8) NOT NULL,
+    funcionario mediumint(8) NOT NULL,
   	PRIMARY KEY (id),
-    FOREIGN KEY (rh) REFERENCES rh(id),
-    FOREIGN KEY (funcionario) REFERENCES funcionario(id)
-) AUTO_INCREMENT=1;
+    FOREIGN KEY (rh) REFERENCES trabalho_concessionaria.rh(id),
+    FOREIGN KEY (funcionario) REFERENCES trabalho_concessionaria.funcionario(id)
+) ;
 
-CREATE TABLE gerenciamento_funcionario
+CREATE TABLE trabalho_concessionaria.gerenciamento_funcionario
 (
-    id mediumint(8) unsigned NOT NULL AUTO_INCREMENT,
-    rh mediumint(8) unsigned NOT NULL,
-    funcionario mediumint(8) unsigned NOT NULL,
+    id mediumint(8) NOT NULL ,
+    rh mediumint(8) NOT NULL,
+    funcionario mediumint(8) NOT NULL,
   	PRIMARY KEY (id),
-    FOREIGN KEY (rh) REFERENCES rh(id),
-    FOREIGN KEY (funcionario) REFERENCES funcionario(id)
-) AUTO_INCREMENT=1;
-
-
-
-
+    FOREIGN KEY (rh) REFERENCES trabalho_concessionaria.rh(id),
+    FOREIGN KEY (funcionario) REFERENCES trabalho_concessionaria.funcionario(id)
+) ;

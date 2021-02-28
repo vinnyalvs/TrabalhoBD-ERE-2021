@@ -1,4 +1,4 @@
-CREATE SCHEMA trabalho_concessionaria
+CREATE SCHEMA trabalho_concessionaria;
 
 DROP TABLE  IF EXISTS pessoa;
 DROP TABLE  IF EXISTS cliente;
@@ -7,7 +7,7 @@ DROP TABLE  IF EXISTS vendedor;
 
 
 CREATE TABLE trabalho_concessionaria.pessoa (
-  id int NOT NULL ,
+  id int NOT NULL  CHECK (id > 0),
   nome varchar(255) default NULL,
   email varchar(255) default NULL,
   telefone varchar(100) default NULL,
@@ -60,7 +60,7 @@ CREATE TABLE trabalho_concessionaria.rh
 CREATE TABLE trabalho_concessionaria.vendedor
 (
     id int NOT NULL,
-    qtdvendas int default 0,
+    qtdvendas int default 0  CHECK (qtdvendas > 0),
     PRIMARY KEY (id),
     FOREIGN KEY (id) REFERENCES trabalho_concessionaria.funcionario(id) 
         ON UPDATE CASCADE
@@ -70,7 +70,7 @@ CREATE TABLE trabalho_concessionaria.vendedor
 CREATE TABLE trabalho_concessionaria.comprador
 (
     id int NOT NULL,
-    qtdcompras int default 0,
+    qtdcompras int default 0 CHECK (qtdcompras > 0),
     PRIMARY KEY (id),
     FOREIGN KEY (id) REFERENCES trabalho_concessionaria.funcionario(id) 
         ON UPDATE CASCADE
@@ -79,16 +79,16 @@ CREATE TABLE trabalho_concessionaria.comprador
 
 CREATE TABLE trabalho_concessionaria.nota_fiscal
 (
-    id int NOT NULL ,
+    id int NOT NULL CHECK (id > 0),
     data_emissao date,
-    valor float,
-    parcelas int,
+    valor float CHECK (valor > 0),
+    parcelas int CHECK (parcelas > 0),
     PRIMARY KEY (id)
 );
 
 CREATE TABLE trabalho_concessionaria.nota_fiscal_aquisicao
 (
-    id int NOT NULL,
+    id int NOT NULL CHECK (id > 0),
     PRIMARY KEY (id),
     FOREIGN KEY (id) REFERENCES trabalho_concessionaria.nota_fiscal(id) 
         ON UPDATE CASCADE
@@ -97,7 +97,7 @@ CREATE TABLE trabalho_concessionaria.nota_fiscal_aquisicao
 
 CREATE TABLE trabalho_concessionaria.nota_fiscal_venda
 (
-    id int NOT NULL,
+    id int NOT NULL CHECK (id > 0),
     PRIMARY KEY (id),
     FOREIGN KEY (id) REFERENCES trabalho_concessionaria.nota_fiscal(id) 
         ON UPDATE CASCADE
@@ -107,12 +107,12 @@ CREATE TABLE trabalho_concessionaria.nota_fiscal_venda
 
 CREATE TABLE trabalho_concessionaria.venda
 (
-    id int NOT NULL ,
-    quantidade int default 0,
+    id int NOT NULL CHECK (id > 0),
+    quantidade int default 0 CHECK (quantidade > 0),
     cliente int NOT NULL,
-    vendedor int NOT NULL,
+    vendedor int NOT NULL),
     nota_fiscal int NOT NULL,
-    desconto float default 0,
+    desconto float default 0 CHECK (desconto > 0),
   	PRIMARY KEY (id),
     FOREIGN KEY (cliente) REFERENCES trabalho_concessionaria.cliente(id) 
         ON UPDATE CASCADE
@@ -127,7 +127,7 @@ CREATE TABLE trabalho_concessionaria.venda
 
 CREATE TABLE trabalho_concessionaria.aquisicao
 (
-    id int NOT NULL ,
+    id int NOT NULL CHECK (id > 0),
     quantidade int default 0,
     comprador int NOT NULL,
     nota_fiscal int NOT NULL,
@@ -143,9 +143,9 @@ CREATE TABLE trabalho_concessionaria.aquisicao
 
 CREATE TABLE trabalho_concessionaria.patio
 (
-    id int NOT NULL ,
+    id int NOT NULL CHECK (id > 0),
     nome varchar(255) default NULL,
-    capacidade int default 10,
+    capacidade int default 10 CHECK (capacidade > 0),
     cidade varchar(255) default NULL,
     estado varchar(50) default NULL,
     bairro varchar(255) default NULL,
@@ -156,9 +156,9 @@ CREATE TABLE trabalho_concessionaria.patio
 
 CREATE TABLE trabalho_concessionaria.veiculo
 (
-    id int NOT NULL ,
-    quantidade int default 1,
-    ano int default NULL,
+    id int NOT NULL CHECK (id > 0),
+    quantidade int default 1 CHECK (quantidade > 0),
+    ano int default NULL CHECK (ano > 1960),
     modelo varchar(255) default NULL,
     cor varchar(255) default NULL,
     tipo varchar(255) default NULL,
@@ -174,8 +174,8 @@ CREATE TABLE trabalho_concessionaria.veiculo
 
 CREATE TABLE trabalho_concessionaria.meta_de_vendas
 (
-    id int NOT NULL ,
-    quantidade_automoveis_vendidos int default 1,
+    id int NOT NULL CHECK (id > 0),
+    quantidade_automoveis_vendidos int default 1 CHECK (quantidade_automoveis_vendidos > 0),
     mes date default NULL,
     gerente int NOT NULL,
   	PRIMARY KEY (id),
@@ -184,9 +184,9 @@ CREATE TABLE trabalho_concessionaria.meta_de_vendas
 
 CREATE TABLE trabalho_concessionaria.bonificacao
 (
-    id int NOT NULL ,
+    id int NOT NULL  CHECK (id > 0),
     data_bonificacao date default NULL,
-    valor float default 0,
+    valor float default 0 CHECK (valor > 0),
     gerente int NOT NULL,
     funcionario int NOT NULL,
   	PRIMARY KEY (id),
@@ -196,9 +196,9 @@ CREATE TABLE trabalho_concessionaria.bonificacao
 
 CREATE TABLE trabalho_concessionaria.pagamento
 (
-    id int NOT NULL ,
+    id int NOT NULL CHECK (id > 0),
     data_pagamento date default NULL,
-    valor float default 0,
+    valor float default 0 CHECK (valor > 0),
     rh int NOT NULL,
     funcionario int NOT NULL,
   	PRIMARY KEY (id),
@@ -208,7 +208,7 @@ CREATE TABLE trabalho_concessionaria.pagamento
 
 CREATE TABLE trabalho_concessionaria.gerenciamento_funcionario
 (
-    id int NOT NULL ,
+    id int NOT NULL  CHECK (id > 0),
     rh int NOT NULL,
     funcionario int NOT NULL,
   	PRIMARY KEY (id),

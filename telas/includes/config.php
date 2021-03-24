@@ -1,8 +1,8 @@
 <?php 
 // DB credentials.
 define('DB_HOST','localhost'); //pgsql-db
-define('DB_USER','recmem-dev');
-define('DB_PASS','123456');
+define('DB_USER','usuario');
+define('DB_PASS','senha');
 define('DB_NAME','concessionaria');
 // Establish database connection.
 try

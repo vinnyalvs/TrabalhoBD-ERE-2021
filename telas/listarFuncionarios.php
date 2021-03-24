@@ -1,6 +1,6 @@
 <?php
     session_start();
-    include('includes/config.php');
+    include(__DIR__ . '/includes/config.php');
     $sql ="SELECT f.*,p.nome,p.email,p.telefone FROM trabalho_concessionaria.funcionario as f
     JOIN trabalho_concessionaria.Pessoa as p
     ON p.id = f.id ";
